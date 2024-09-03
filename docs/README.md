@@ -129,7 +129,17 @@ docker-compose -f docker-compose.initial.yml up --build -d
 
 ### solution
 
-> explain briefly your solution for this problem here
+- I separated the old user_home table into two different tables: user and home. This was to normalize the database structure.
+- Then, I created a new table called user_interests, which stores pairs of user_id (referencing user.id from the user table) and home_id (referencing home.id from the home table).
+- This user_interests table will be used to track which users are interested in which homes.
+- I added created_at and updated_at fields to each table. While they might not seem crucial, I find it useful to have them in case I need to query data based on specific timestamps.
+- I also added indexes to the user_interests table to improve performance.
+- After that, I migrated all the data from the user_home table to the user, home, and user_interests tables accordingly. During the insertion, I ensured that there were no duplicate records.
+- To successfully run the container, you don't need to execute any extra command. Simply run the following command, as mentioned in this document, to start the final container:
+	```bash
+		docker compose -f docker-compose.final.yml up --build -d
+	```
+- To save some typing, I created a Makefile with four rules that can spin up or down the initial or final container for my own convenience. You can have a look at it and use it as per your preference.
 
 ## 2. React SPA
 
