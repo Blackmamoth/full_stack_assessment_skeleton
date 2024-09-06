@@ -1,0 +1,16 @@
+{
+  "name": "full_stack_assessment_skeleton",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "backend": "cd backend && yarn start:dev",
+    "frontend": "cd frontend && yarn dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

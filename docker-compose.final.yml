@@ -1,4 +1,4 @@
-services: 
+services:
   mysql_ctn_final:
     build:
       context: .

@@ -14,7 +14,7 @@ import { handleHTTPError } from '..//common/helper';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Get('find-all')
   @HttpCode(HttpStatus.OK)
@@ -27,6 +27,7 @@ export class UserController {
   }
 
   @Post('find-by-home')
+  @HttpCode(HttpStatus.OK)
   @UseFilters(new HttpExceptionFilter())
   async findByHome(@Body() body: FindByHomeDTO) {
     try {

@@ -18,7 +18,7 @@ export class HomeService {
     userId: number,
     limit: number,
     offset: number,
-  ): Promise<Home[]> {
+  ): Promise<{ homes: Home[], total_count: number }> {
     const homes = await this.userInterestRepository.find({
       where: {
         user_id: userId,
@@ -27,7 +27,13 @@ export class HomeService {
       take: limit,
       skip: offset,
     });
-    return homes.map((h) => h.home);
+    const homesCount = await this.userInterestRepository.findAndCount({
+      where: {
+        user_id: userId,
+      },
+      select: []
+    })
+    return { homes: homes.map((h) => h.home), total_count: homesCount[1] };
   }
 
   async updateUsers(uncheckedUsers: number[], homeId: number) {
