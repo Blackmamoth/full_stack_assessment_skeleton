@@ -135,6 +135,7 @@ docker-compose -f docker-compose.initial.yml up --build -d
 - I added created_at and updated_at fields to each table. While they might not seem crucial, I find it useful to have them in case I need to query data based on specific timestamps.
 - I also added indexes to the user_interests table to improve performance.
 - After that, I migrated all the data from the user_home table to the user, home, and user_interests tables accordingly. During the insertion, I ensured that there were no duplicate records.
+- I manually created the 99_final_db_dump.sql file. Prior to writing the script, I executed SQL commands directly within the Docker container to verify their effects. Although I was confident in the expected outcomes of these commands, I wanted to ensure their accuracy. Once I confirmed that the commands performed as intended, I incorporated them into the 99_final_db_dump.sql file.
 - To successfully run the container, you don't need to execute any extra command. Simply run the following command, as mentioned in this document, to start the final container:
 	```bash
 		docker compose -f docker-compose.final.yml up --build -d
@@ -229,8 +230,25 @@ docker-compose -f docker-compose.initial.yml up --build -d
 > even if you can do state-management without Redux, you still must use Redux for the solution, (remember the idea is to showcase the skills)
 
 ### solution
+- I used Vite to create a React application and incorporated the DaisyUI plugin for Tailwind CSS, which provides all the necessary components for this assessment.
+- To get the frontend up and running, first install the dependencies in the `frontend` directory. Navigate to the `frontend` folder in the root of the project and run the command `yarn install`.
+- If you're not using Yarn while testing this project, make sure to delete the `yarn.lock` file inside the `frontend` directory to avoid any potential conflicts.
+- Once the dependencies are installed, you can start the frontend application. From the `frontend` directory, run the command `yarn dev` (or `npm run dev` if you're using npm). Alternatively, you can start the frontend from the root directory by running the command `yarn frontend`.
+- After the frontend application is running, navigate to [http://127.0.0.1:5173](http://127.0.0.1:5173).
+- TanStack Query was used for data fetching in this project, and I created custom hooks to integrate it into the application.
+- On the root page, you'll see a select box. Ensure the backend is running, and you'll be able to see a list of users in the select box.
+- When you select a user, a grid layout will display a list of cards, each containing information about homes that the user is interested in, along with an `Edit User` button.
+- Clicking the `Edit User` button opens a modal that shows all users interested in that specific home.
+- If you uncheck one or more users and close the modal without saving, the changes won't be applied. When you reopen the modal (without refreshing the page), the unchecked users will remain unchecked. However, if you click save, a request will be sent to the backend, and the unchecked users will be removed from the `user_interests` table, indicating they are no longer interested in that home.
+- For pagination, I added components above and below the cards for convenience. Both pagination components are synchronized, so any changes made with one (e.g., clicking `prev` or `next`) will be reflected in the other.
+- I structured my React project as follows:
 
-> explain briefly your solution for this problem here
+- `src/components/` – Contains the React components.
+- `src/hooks/` – Houses custom hooks.
+- `src/types/` – Includes type definitions for users and homes.
+
+- The remaining files include the Tailwind CSS setup, which can be referenced on the [Tailwind CSS website](https://tailwindcss.com/docs/guides/vite). In `index.ts`, I configured the `QueryClientProvider` from TanStack React Query to be available throughout the application. The `App.tsx` file contains the layout for the home page.
+
 
 ## 3. Backend API development on Node
 
@@ -290,8 +308,17 @@ docker-compose -f docker-compose.initial.yml up --build -d
     - we do NOT want raw SQL, if none of above works, you can use any ORM you know, but please mention and link to it in the README
 
 ### solution
+- The backend application for this project is built using NestJS, with TypeORM for interacting with a MySQL database hosted in a Docker container.
+- Install the backend dependencies with `yarn install` (or an equivalent package manager command). If you're using a different package manager, be sure to delete the `yarn.lock` file to avoid conflicts.
+- You can start the backend server from the `backend` directory by running `yarn start:dev`, or from the root directory with `yarn backend`.
+- The backend connects to the MySQL server using TypeORM. Credentials are stored in a `.env` file and retrieved via NestJS's config package (see `src/app.module.ts`).
+- To set up environment variables, no additional action is required as the `.env` file has been committed directly. Provided the file is not moved, it should not cause any issues with the application.
+- I created two modules, `home` and `user`, using the Nest CLI. Each module contains endpoints relevant to the project's requirements.
+- Controllers and services were generated using the Nest CLI. In the services, I injected database dependencies and created methods such as `findByUser`, `updateUsers`, `findAllUsers`, and `findByHome` to handle the necessary functionality.
+- Controllers include appropriate HTTP codes using decorators, and I used the `class-validator` package to create DTOs for request validation, with a global validation pipe for consistent input validation.
+- I also implemented a custom HTTP exception filter to standardize the response format for exceptions.
+- To enable interaction between the frontend and backend, I configured CORS and hardcoded the frontend host as the allowed origin.
 
-> explain briefly your solution for this problem here
 
 ## Submission Guidelines
 

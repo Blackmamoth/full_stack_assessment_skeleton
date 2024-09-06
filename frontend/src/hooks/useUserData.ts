@@ -8,5 +8,6 @@ export const useUserData = () => {
             const response = await fetch('http://localhost:3000/user/find-all');
             return response.json();
         },
+        retry: 5,
     });
 };

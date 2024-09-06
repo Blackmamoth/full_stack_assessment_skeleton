@@ -15,5 +15,6 @@ export const useHomeData = (offset: number, setTotalPages: (totalPages: number) 
         onSuccess: (data) => {
             setTotalPages(Math.ceil(data.total_count / 50));
         },
+        retry: 5,
     });
 };
